@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from "@/components/pages/store/authStore";
 import { setTokens } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,10 +22,10 @@ export default function LoginForm() {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.post('/auth/login', { email, password });
-      const { access_token, refresh_token } = response.data;
-      setTokens(access_token, refresh_token);
-      login(access_token, refresh_token);
+      const response = await api.post('/v1/auth/login', { email, password });
+      const { accessToken, refreshToken } = response.data.data;
+      setTokens(accessToken, refreshToken);
+      login(accessToken, refreshToken);
       router.push('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');

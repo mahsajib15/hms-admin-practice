@@ -1,10 +1,10 @@
 import Cookies from "js-cookie";
 
-const ACCESS_TOKEN_KEY = "access_token";
 const REFRESH_TOKEN_KEY = "refresh_token";
 
 export const setTokens = (accessToken, refreshToken) => {
-  Cookies.set(ACCESS_TOKEN_KEY, accessToken, {
+  console.warn("setTokens function is using Cookies. Consider updating to localStorage if authSlice is the primary token manager.");
+  Cookies.set("access_token", accessToken, {
     expires: 7,
     secure: process.env.NODE_ENV === "production",
   });
@@ -15,7 +15,16 @@ export const setTokens = (accessToken, refreshToken) => {
 };
 
 export const getAccessToken = () => {
-  return Cookies.get(ACCESS_TOKEN_KEY);
+  try {
+    const storedAuth = window.localStorage.getItem('li');
+    if (storedAuth) {
+      const parsedAuth = JSON.parse(storedAuth);
+      return parsedAuth.acs;
+    }
+  } catch (error) {
+    console.error("Error parsing auth data from localStorage:", error);
+  }
+  return null;
 };
 
 export const getRefreshToken = () => {
@@ -23,8 +32,9 @@ export const getRefreshToken = () => {
 };
 
 export const removeTokens = () => {
-  Cookies.remove(ACCESS_TOKEN_KEY);
+  Cookies.remove("access_token");
   Cookies.remove(REFRESH_TOKEN_KEY);
+  window.localStorage.removeItem('li');
 };
 
 export const isAuthenticated = () => {

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { useAuthStore } from "@/pages/store/authStore";
+import { useAuthStore } from "@/components/pages/store/authStore";
 
 export default function AuthChecker({ children }) {
   const { isAuthenticated } = useAuthStore();
@@ -16,7 +16,7 @@ export default function AuthChecker({ children }) {
   }, [isAuthenticated, pathname, router]);
 
   if (!isAuthenticated && pathname !== "/login") {
-    return null; // Or a loading spinner
+    return null; 
   }
 
   return <>{children}</>;
